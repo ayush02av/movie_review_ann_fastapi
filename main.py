@@ -1,5 +1,4 @@
 import numpy as np
-from nltk.corpus import stopwords
 from gensim.models import Word2Vec
 from nltk.stem import PorterStemmer
 from keras.models import Sequential
@@ -21,7 +20,6 @@ app.add_middleware(
 )
 
 stemmer = PorterStemmer()
-stopwords_english = stopwords.words('english')
 vector: Word2Vec = joblib.load("vector.pkl")
 scaler: StandardScaler = joblib.load("scaler.pkl")
 model: Sequential = load_model("model.keras")
@@ -30,7 +28,6 @@ def predict(prompt: str):
     prompt = [
         stemmer.stem(word)
         for word in prompt.split()
-        if word not in stopwords_english
     ]
     prompt = vector.wv.get_mean_vector(prompt).tolist()
     prompt = np.asarray([prompt])
